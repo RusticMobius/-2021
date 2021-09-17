@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
 import docx
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-
+import re
 
 def eachPath(filepath):
     #显示文件文件夹里所有的文件类型并且做格式判断
@@ -70,6 +69,7 @@ def docxParser(filepath):
 
 
 def docxParaParser(para):
+
     print("段落正文",para.text,sep=":")
     # 段落格式
     # 缩进,正为首行缩进，负为悬挂缩进
@@ -88,11 +88,23 @@ def docxParaParser(para):
     else:
         print(para.paragraph_format.alignment)
 
+    # 段前间距
+    if para.paragraph_format.space_before is None:
+        print("段前间距",para.paragraph_format.space_before,sep=":")
+    else:
+        print("段前间距",para.paragraph_format.space_before.pt,sep=":")
+
+    #段后间距
+    if para.paragraph_format.space_after is None:
+        print("段后间距", para.paragraph_format.space_after,sep=":")
+    else:
+        print("段后间距", para.paragraph_format.space_after.pt,sep=":")
+
     #行间距
     if para.paragraph_format.line_spacing is None:
-        print(para.paragraph_format.line_spacing)
+        print("行间距",para.paragraph_format.line_spacing,sep=":")
     else:
-        print(para.paragraph_format.line_spacing.pt)
+        print("行间距",para.paragraph_format.line_spacing.pt,sep=":")
 
 
     #大纲等级
@@ -110,23 +122,27 @@ def docxParaParser(para):
     print("字单元个数",len(para.runs),sep=":")
     for index,unit in enumerate(para.runs):
         print("字单元"+str(index))
-        print("正文",unit.text,sep=":")
-        #字体大小
-        if unit.font.size is None:
-            print(unit.font.size)
-        else:
-            print(unit.font.size.pt)
-        # 判断是否为加粗
-        print(unit.font.bold)
-        # 是否为斜体
-        print(unit.font.italic)
-        # 字体名称
-        print(unit.font.name)
-        # 字体颜色
-        print(unit.font.color.rgb)
-        # 是否有下划线
-        print(unit.font.underline)
 
+        print("正文", unit.text, sep=":")
+        # 字体大小
+        if unit.font.size is None:
+            print("未设置字体大小")
+        else:
+            print("字体大小", unit.font.size.pt, sep=":")
+        # 判断是否为加粗
+        print("加粗", unit.font.bold, sep=":")
+        # 是否为斜体
+        print("斜体", unit.font.italic, sep=":")
+        # 字体名称
+        print("字体", unit.font.name, sep=":")
+        # 字体颜色
+        print("文字颜色", unit.font.color.rgb, sep=":")
+        # 是否有下划线
+        print("文字下划线", unit.font.underline, sep=":")
+        # 是否突出显示
+        print("突出显示", unit.font.outline, sep=":")
+
+    print("-----------------------------------")
 
 
 def wpsParser(filepath):
